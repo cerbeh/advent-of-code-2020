@@ -201,14 +201,23 @@
   1779
 ])
 
-(defn timeMachine
-  [ here whereFrom whereTo ]
-  (def remaining (- 2020 here))
+; Part One
+(defn timeMachine [ here whereFrom whereTo ]
+  (let [remaining (- 2020 here)]
   (if (contains? whereFrom remaining)
     (* remaining here)
-    (recur (first whereTo) (set (conj whereFrom here)) (rest whereTo))))
+    (recur (first whereTo) (set (conj whereFrom here)) (rest whereTo)))))
 
 (defn findAnswer [ list ]
   (timeMachine (first list) (set []) (rest list)))
 
-(println (findAnswer expenses) "did i get the answer?")
+
+; Part Two
+(defn buildMultipliers [ list, newMap ]
+  (let [x (first list) remain (- 2020 x)]
+    (if (contains? newMap remain)
+      (* (get newMap remain) x)
+      (recur (rest list) (into newMap (map (fn [y] [(+ x y) (* x y)]) list))))))
+
+(println (findAnswer expenses) "Part One")
+(println (buildMultipliers expenses (hash-map)) "Part Two")
